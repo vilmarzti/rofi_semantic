@@ -16,7 +16,8 @@ APPLICATION_PATH = '/usr/share/applications/'
 def list_apps():
     """List desktop apps in the APPLICATION_PATH folder.
 
-    :return: array with desktop app names
+    Returns:
+        Array with desktop app names.
     """
     command = 'ls ' + APPLICATION_PATH
     ls_output = subprocess.check_output(command, shell=True)
@@ -32,9 +33,12 @@ def get_app_embeddings():
     """Find the latent embeddings of the applications.
 
     Check first for a saved copy of the embeddings. If it doesn't exist, create them
-    and save a copy
+    and save a copy.
 
-    :return: latent embedding of desktop apps
+    Returns:
+        A tuple of np.arrays with the same first dimension.
+        The first array in the tuple holds the names off the listed apps.
+        The second array in the tuple holds the latent space embedded apps.
     """
     if path.isfile(EMBEDDINGS_PATH):
         try:
@@ -58,13 +62,27 @@ def get_app_embeddings():
 
 
 def square(x):
+    """Helper function to square an array with distances.
+
+    Args:
+        x: A number or an np.array.
+
+    Returns:
+        The squared number or an array where each element has been squared.
+    """
     return x ** 2
 
 
 def compare(querystring):
+    # TODO: Compare distance computation to loss function of model. Maybe put distance computation in class function
+    """Compare the querystring to the apps in latent space.
+
+    Args:
+        querystring: A single string that will be encoded into a latent space
+    """
     app_names, app_latent = get_app_embeddings()
 
-    # Compute Scores
+    # Compute distance
     query_embedding = SemanticTransformer().encode([querystring])
     scores = np.dot(app_latent, np.transpose(query_embedding))
     scores = square(scores.flatten())
@@ -74,9 +92,7 @@ def compare(querystring):
     app_names = app_names[sort_index]
     scores = scores[sort_index]
 
-    app_scores = list(zip(app_names, scores))
-
-    return app_scores
+    return app_names, scores
 
 
 if __name__ == "__main__":
@@ -92,7 +108,6 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    scored = compare(args.querystring)
-    for name, score in scored[0:10]:
+    names, scores = compare(args.querystring)
+    for name, score in list(zip(names, scores))[0:10]:
         print(f'{name}: {score}')
-
