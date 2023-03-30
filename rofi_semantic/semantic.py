@@ -14,6 +14,8 @@ APPLICATION_PATH = '/usr/share/applications/'
 
 
 def list_apps():
+    """list_apps.
+    """
     """List desktop apps in the APPLICATION_PATH folder.
 
     Returns:
@@ -84,13 +86,13 @@ def compare(querystring):
 
     # Compute distance
     query_embedding = SemanticTransformer().encode([querystring])
-    scores = np.dot(app_latent, np.transpose(query_embedding))
-    scores = square(scores.flatten())
+    distances = np.linalg.norm(app_latent - query_embedding, axis=1)
+    distances = (distances - distances.mean()) / distances.std()
 
     # Sort
-    sort_index = np.argsort(scores)[::-1]
+    sort_index = np.argsort(distances)
     app_names = app_names[sort_index]
-    scores = scores[sort_index]
+    scores = distances[sort_index]
 
     return app_names, scores
 

@@ -12,6 +12,7 @@ huggingface = "^0.0.1"
 sentence-transformers = "^2.2.2"
 debugpy = "^1.6.6"
 numpy = "^1.24.2"
+sklearn = "^0.0.post1"
 
 
 [tool.poetry.group.dev.dependencies]

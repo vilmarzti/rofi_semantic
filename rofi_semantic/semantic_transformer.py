@@ -8,9 +8,10 @@ Typical usage example:
     embeddings = model.encode(string)
 """
 from sentence_transformers import SentenceTransformer
+from abc import ABC, abstractmethod
 
 
-class SingletonClass:
+class SingletonClass(ABC):
     """A singleton class used as a parent for semantic embedding fo strings.
 
     Attributes:
@@ -28,9 +29,10 @@ class SingletonClass:
             The single instantiation of that classs.
         """
         if cls.__instance is None:
-            cls.__instance = super(SingletonClass, cls).__new__(cls)
+            cls.__instance = super().__new__(cls)
         return cls.__instance
 
+    @abstractmethod
     def encode(self, queries):
         """ General Method that encodes an array of strings into a latent space.
 
@@ -54,16 +56,11 @@ class SemanticTransformer(SingletonClass):
     __model = None
     __model_url = 'sentence-transformers/all-MiniLM-L6-v2'
 
-    def __new__(cls):
+    def __init__(self):
         """Only use one instance of class and add a model if it hasn't been added.
-
-        Args:
-            cls: SemanticTransformer.
         """
-        super().__new__(cls)
-        if cls.__model is None:
-            cls.__model = SentenceTransformer(cls.__model_url)
-        return cls.__instance
+        if self.__model is None:
+            self.__model = SentenceTransformer(self.__model_url)
 
     def encode(self, queries):
         """Use sentence transformer to embed strings into latent space.
