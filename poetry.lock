@@ -1190,6 +1190,17 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)"]
 use-chardet-on-py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
+name = "ripgrepy"
+version = "2.0.0"
+description = ""
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "ripgrepy-2.0.0.tar.gz", hash = "sha256:6dd871bafe859301097354d1f171540fbc9bd38d3f8f52f8a196dc28522085da"},
+]
+
+[[package]]
 name = "scikit-learn"
 version = "1.2.2"
 description = "A set of python modules for machine learning and data mining"
@@ -1819,4 +1830,4 @@ test = ["pytest (>=6.0.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "5784e95e4985237ad29fee652ddabd9a2acbc2bc70de40ab361a2bc533d79b1e"
+content-hash = "2ca5e6ea7a69a766404b326c49ae9bd45d74241f325d06d56d58cf74e4dfe1c9"

@@ -10,6 +10,8 @@ Typical usage example:
 from sentence_transformers import SentenceTransformer
 from abc import ABC, abstractmethod
 
+from constants import TRANSFORMER_URL
+
 
 class SingletonClass(ABC):
     """A singleton class used as a parent for semantic embedding fo strings.
@@ -54,13 +56,12 @@ class SemanticTransformer(SingletonClass):
         __model_url: url to a huggingsface sentence_tranformer.
     """
     __model = None
-    __model_url = 'sentence-transformers/all-MiniLM-L6-v2'
 
     def __init__(self):
         """Only use one instance of class and add a model if it hasn't been added.
         """
         if self.__model is None:
-            self.__model = SentenceTransformer(self.__model_url)
+            self.__model = SentenceTransformer(TRANSFORMER_URL)
 
     def encode(self, queries):
         """Use sentence transformer to embed strings into latent space.

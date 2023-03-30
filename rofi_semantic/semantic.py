@@ -4,31 +4,11 @@ import numpy as np
 
 import os
 import argparse
-import subprocess
 import json
 
 from semantic_transformer import SemanticTransformer
-
-EMBEDDINGS_PATH = './desktop_embeddings.json'
-APPLICATION_PATH = '/usr/share/applications/'
-
-
-def list_apps():
-    """list_apps.
-    """
-    """List desktop apps in the APPLICATION_PATH folder.
-
-    Returns:
-        Array with desktop app names.
-    """
-    command = 'ls ' + APPLICATION_PATH
-    ls_output = subprocess.check_output(command, shell=True)
-
-    program_list = ls_output.decode().split('\n')
-
-    # remove desktop postfix
-    program_list = [app_basename.replace('.desktop', '') for app_basename in program_list]
-    return program_list
+from constants import EMBEDDINGS_PATH
+from app_information import list_app_names
 
 
 def get_app_embeddings():
@@ -50,7 +30,7 @@ def get_app_embeddings():
             os.remove(EMBEDDINGS_PATH)
             get_app_embeddings
     else:
-        apps = list_apps()
+        apps = list_app_names()
         embeddings = SemanticTransformer().encode(apps)
         embeddings = [[app, emb.tolist()] for app, emb in list(zip(apps, embeddings))]
 
@@ -76,7 +56,6 @@ def square(x):
 
 
 def compare(querystring):
-    # TODO: Compare distance computation to loss function of model. Maybe put distance computation in class function
     """Compare the querystring to the apps in latent space.
 
     Args:
@@ -84,7 +63,7 @@ def compare(querystring):
     """
     app_names, app_latent = get_app_embeddings()
 
-    # Compute distance
+    # Compute distance and normalize/standartize
     query_embedding = SemanticTransformer().encode([querystring])
     distances = np.linalg.norm(app_latent - query_embedding, axis=1)
     distances = (distances - distances.mean()) / distances.std()
