@@ -6,6 +6,7 @@ import os
 import argparse
 import json
 
+from scipy.special import softmax
 from semantic_transformer import SemanticTransformer
 from constants import EMBEDDINGS_PATH
 from app_information import list_app_names
@@ -43,18 +44,6 @@ def get_app_embeddings():
     return app_names, app_latent
 
 
-def square(x):
-    """Helper function to square an array with distances.
-
-    Args:
-        x: A number or an np.array.
-
-    Returns:
-        The squared number or an array where each element has been squared.
-    """
-    return x ** 2
-
-
 def compare(querystring):
     """Compare the querystring to the apps in latent space.
 
@@ -66,12 +55,13 @@ def compare(querystring):
     # Compute distance and normalize/standartize
     query_embedding = SemanticTransformer().encode([querystring])
     distances = np.linalg.norm(app_latent - query_embedding, axis=1)
-    distances = (distances - distances.mean()) / distances.std()
+    distances = -(distances - distances.mean()) / distances.std()
+    percentage_score = softmax(distances) * 100
 
     # Sort
-    sort_index = np.argsort(distances)
+    sort_index = np.argsort(percentage_score)[::-1]
     app_names = app_names[sort_index]
-    scores = distances[sort_index]
+    scores = percentage_score[sort_index]
 
     return app_names, scores
 
