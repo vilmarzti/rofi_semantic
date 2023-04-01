@@ -1048,6 +1048,18 @@ test = ["coverage", "flaky", "matplotlib", "mock", "numpy", "pandas", "pylint (>
 yapf = ["yapf"]
 
 [[package]]
+name = "pyxdg"
+version = "0.28"
+description = "PyXDG contains implementations of freedesktop.org standards in python."
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pyxdg-0.28-py2.py3-none-any.whl", hash = "sha256:bdaf595999a0178ecea4052b7f4195569c1ff4d344567bccdc12dfdf02d545ab"},
+    {file = "pyxdg-0.28.tar.gz", hash = "sha256:3267bb3074e934df202af2ee0868575484108581e6f3cb006af1da35395e88b4"},
+]
+
+[[package]]
 name = "pyyaml"
 version = "6.0"
 description = "YAML parser and emitter for Python"
@@ -1830,4 +1842,4 @@ test = ["pytest (>=6.0.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "2ca5e6ea7a69a766404b326c49ae9bd45d74241f325d06d56d58cf74e4dfe1c9"
+content-hash = "740b57831969943e07cd0a541fdd33da19e9f543267928cc9f29d1e4ccb186da"
