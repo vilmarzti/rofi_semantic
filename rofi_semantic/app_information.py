@@ -3,7 +3,11 @@ from glob import glob
 from xdg.DesktopEntry import DesktopEntry
 from xdg.Exceptions import ParsingError, DuplicateGroupError, DuplicateKeyError
 
+from semantic_transformer import SemanticTransformer
+
+import re
 import logging
+import subprocess
 
 
 def get_app_paths():
@@ -28,16 +32,44 @@ def get_raw_app_information():
     return entries
 
 
+def get_whatis_entry(name, command):
+    whatis_cmd = subprocess.run(['whatis', '-l', command], capture_output=True)
+
+    description = None
+    if whatis_cmd.returncode == 0:
+        description = re.sub(r'^.*-', f'{name}:', whatis_cmd.stdout.decode('utf-8'))
+        description = re.sub(r'(\n.*)*', '', description)
+
+    return description
+
+
+def get_app_description(xdg_entry):
+    name = xdg_entry.getName()
+    exec_command = re.match(r'\S*', xdg_entry.getExec())
+
+    if exec_command is not None:
+        description = get_whatis_entry(name, exec_command.string)
+
+    if description is None and (comment := xdg_entry.getComment()) != '':
+        description = f'{name}: {comment}'
+
+    if description is None:
+        description = f'{name}'
+
+    return description
+
+
 def get_app_information():
-    # TODO: Select information and query man
-    matches = get_raw_app_information()
-    return matches
-
-
-def list_app_names():
     entries = get_raw_app_information()
-    return [e.getName() for e in entries]
 
-
-if __name__ == '__main__':
-    get_app_information()
+    encoder = SemanticTransformer()
+    processed_entries = []
+    for entry in entries:
+        description = get_app_description(entry)
+        processed_entries.append({
+            'name': entry.getName(),
+            'icon': entry.getIcon(),
+            'desc': description,
+            'embedding': encoder.encode([description])
+        })
+    return processed_entries

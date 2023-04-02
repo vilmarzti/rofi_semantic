@@ -7,9 +7,10 @@ import argparse
 import json
 
 from scipy.special import softmax
+
 from semantic_transformer import SemanticTransformer
 from constants import EMBEDDINGS_PATH
-from app_information import list_app_names
+from app_information import get_app_information
 
 
 def get_app_embeddings():
@@ -26,22 +27,16 @@ def get_app_embeddings():
     if path.isfile(EMBEDDINGS_PATH):
         try:
             with open(EMBEDDINGS_PATH, 'r') as f:
-                embeddings = json.load(f)
+                app_info = json.load(f)
         except (json.JSONDecodeError):
             os.remove(EMBEDDINGS_PATH)
             get_app_embeddings
     else:
-        apps = list_app_names()
-        embeddings = SemanticTransformer().encode(apps)
-        embeddings = [[app, emb.tolist()] for app, emb in list(zip(apps, embeddings))]
-
+        app_info = get_app_information()
         with open(EMBEDDINGS_PATH, 'w') as f:
-            json.dump(embeddings, f)
+            json.dump(app_info, f)
 
-    app_names = np.array([a for a, _ in embeddings])
-    app_latent = np.array([e for _, e in embeddings])
-
-    return app_names, app_latent
+    return app_info
 
 
 def compare(querystring):
@@ -50,7 +45,7 @@ def compare(querystring):
     Args:
         querystring: A single string that will be encoded into a latent space
     """
-    app_names, app_latent = get_app_embeddings()
+    app_info = get_app_embeddings()
 
     # Compute distance and normalize/standartize
     query_embedding = SemanticTransformer().encode([querystring])
