@@ -66,10 +66,11 @@ def get_app_information():
     processed_entries = []
     for entry in entries:
         description = get_app_description(entry)
+        embedding = encoder.encode([description])[0].tolist()
         processed_entries.append({
             'name': entry.getName(),
             'icon': entry.getIcon(),
             'desc': description,
-            'embedding': encoder.encode([description])
+            'embedding': embedding
         })
     return processed_entries

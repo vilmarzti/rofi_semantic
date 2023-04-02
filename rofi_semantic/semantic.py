@@ -13,16 +13,11 @@ from constants import EMBEDDINGS_PATH
 from app_information import get_app_information
 
 
-def get_app_embeddings():
+def load_apps():
     """Find the latent embeddings of the applications.
 
     Check first for a saved copy of the embeddings. If it doesn't exist, create them
     and save a copy.
-
-    Returns:
-        A tuple of np.arrays with the same first dimension.
-        The first array in the tuple holds the names off the listed apps.
-        The second array in the tuple holds the latent space embedded apps.
     """
     if path.isfile(EMBEDDINGS_PATH):
         try:
@@ -30,7 +25,7 @@ def get_app_embeddings():
                 app_info = json.load(f)
         except (json.JSONDecodeError):
             os.remove(EMBEDDINGS_PATH)
-            get_app_embeddings
+            load_apps()
     else:
         app_info = get_app_information()
         with open(EMBEDDINGS_PATH, 'w') as f:
@@ -45,7 +40,8 @@ def compare(querystring):
     Args:
         querystring: A single string that will be encoded into a latent space
     """
-    app_info = get_app_embeddings()
+    app_info = load_apps()
+    app_latent = np.array([info['embedding'] for info in app_info])
 
     # Compute distance and normalize/standartize
     query_embedding = SemanticTransformer().encode([querystring])
@@ -55,10 +51,10 @@ def compare(querystring):
 
     # Sort
     sort_index = np.argsort(percentage_score)[::-1]
-    app_names = app_names[sort_index]
-    scores = percentage_score[sort_index]
+    apps_sorted = [app_info[index] for index in sort_index]
+    scores = [percentage_score[index] for index in sort_index]
 
-    return app_names, scores
+    return apps_sorted, scores
 
 
 if __name__ == "__main__":
