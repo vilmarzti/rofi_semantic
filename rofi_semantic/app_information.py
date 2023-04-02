@@ -25,7 +25,7 @@ def get_raw_app_information():
     for file_path in get_app_paths():
         try:
             entry = DesktopEntry(file_path)
-            if entry.getType() == 'Application':
+            if entry.getType() == 'Application' and entry.getExec() is not None and entry.getIcon() is not None:
                 entries.append(entry)
         except (ParsingError, DuplicateGroupError, DuplicateKeyError):
             logging.warning(f'Parsing Error in file {file_path}')
@@ -70,6 +70,7 @@ def get_app_information():
         processed_entries.append({
             'name': entry.getName(),
             'icon': entry.getIcon(),
+            'exec': entry.getExec(),
             'desc': description,
             'embedding': embedding
         })

@@ -70,6 +70,6 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    names, scores = compare(args.querystring)
-    for name, score in list(zip(names, scores))[0:10]:
-        print(f'{name}: {score}')
+    app_info, scores = compare(args.querystring)
+    for name, score in list(zip(app_info, scores))[0:10]:
+        print(f'{app_info.name}: {score}')
