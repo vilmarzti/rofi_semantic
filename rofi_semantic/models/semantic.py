@@ -10,7 +10,7 @@ Typical usage example:
 from sentence_transformers import SentenceTransformer
 from abc import ABC, abstractmethod
 
-from constants import TRANSFORMER_URL
+from ..constants import TRANSFORMER_URL
 
 
 class SingletonClass(ABC):
