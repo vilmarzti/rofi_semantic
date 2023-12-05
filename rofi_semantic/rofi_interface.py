@@ -8,6 +8,18 @@ from semantic import compare
 from os import environ
 
 
+def get_rofi_env():
+    """
+        return value: 0 - first call
+                      1 - select an entry
+                      2 - selected a custom entry
+    """
+    return {
+            'return_value': environ['ROFI_RETV'],
+            'info': envvion['ROFI_INFO'],
+            'data': envviron['ROFI_DATA']
+            }
+
 def find_desktop_apps(query):
     app_infos, app_scores = compare(query)
 

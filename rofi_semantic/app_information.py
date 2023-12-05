@@ -1,9 +1,19 @@
 from os import path, environ
+<<<<<<< HEAD
 from glob import glob
 from xdg.DesktopEntry import DesktopEntry
 from xdg.Exceptions import ParsingError, DuplicateGroupError, DuplicateKeyError
 
 from semantic_transformer import SemanticTransformer
+=======
+
+from glob import glob
+from xdg.BaseDirectory import xdg_data_dirs
+from xdg.DesktopEntry import DesktopEntry
+from xdg.Exceptions import ParsingError, DuplicateGroupError, DuplicateKeyError
+
+#from semantic_transformer import SemanticTransformer
+>>>>>>> a8eaea6 (Docs)
 
 import re
 import logging
@@ -11,16 +21,28 @@ import subprocess
 
 
 def get_app_paths():
+<<<<<<< HEAD
     paths = environ.get("XDG_DATA_DIRS").split(':')
     paths = [p for p in paths if path.exists(p)]
 
     file_paths = []
     for p in paths:
+=======
+    """ Returns all entries from the given xdg paths
+    """
+    file_paths = []
+    for p in xdg_data_dirs:
+>>>>>>> a8eaea6 (Docs)
         file_paths.extend(glob(path.join(p, '**/*.desktop'), recursive=True))
     return file_paths
 
 
 def get_raw_app_information():
+<<<<<<< HEAD
+=======
+    """Parse all the xdg entries.
+    """
+>>>>>>> a8eaea6 (Docs)
     entries = []
     for file_path in get_app_paths():
         try:
@@ -33,6 +55,15 @@ def get_raw_app_information():
 
 
 def get_whatis_entry(name, command):
+<<<<<<< HEAD
+=======
+    """ Use 'whatis <command>' to get a natural language description.
+
+    Args:
+        name: Name of entry
+        command: Command to look up
+    """
+>>>>>>> a8eaea6 (Docs)
     whatis_cmd = subprocess.run(['whatis', '-l', command], capture_output=True)
 
     description = None
@@ -44,6 +75,14 @@ def get_whatis_entry(name, command):
 
 
 def get_app_description(xdg_entry):
+<<<<<<< HEAD
+=======
+    """Check 'whatis' or xdg entry comment for natural language description
+
+    Args:
+        xdg_entry: Parsed xdg entry
+    """
+>>>>>>> a8eaea6 (Docs)
     name = xdg_entry.getName()
     exec_command = re.match(r'\S*', xdg_entry.getExec())
 
@@ -60,6 +99,11 @@ def get_app_description(xdg_entry):
 
 
 def get_app_information():
+<<<<<<< HEAD
+=======
+    """get_app_information.
+    """
+>>>>>>> a8eaea6 (Docs)
     entries = get_raw_app_information()
 
     encoder = SemanticTransformer()
@@ -75,3 +119,9 @@ def get_app_information():
             'embedding': embedding
         })
     return processed_entries
+<<<<<<< HEAD
+=======
+
+
+get_raw_app_information()
+>>>>>>> a8eaea6 (Docs)
