@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "rofimantic"
+version = "0.1.0"
+description = ""
+authors = ["vilmarzti <villavicencio.martin@protonmail.com>"]
+readme = "README.md"
+packages = [{include = "rofi_semantic"}]
+repository = "https://github.com/vilmarzti/rofi_semantic"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+numpy = "^1.24.2"
+pyxdg = "^0.28"
+
+[tool.poetry.group.torch]
+optional = true
+
+[tool.poetry.group.torch.dependencies]
+huggingface = "^0.0.1"
+sentence-transformers = "^2.2.2"
+neural-compressor = "^2.1"
+
+[tool.poetry.group.dev.dependencies]
+jedi-language-server = "^0.41.2"
+debugpy = "^1.6.6"
+autopep8 = "^2.0.2"
+pyflakes = "^3.0.1"
+pynvim = "^0.4.3"
+doq = "^0.9.1"
+optimum = {extras = ["intel"], version = "^1.7.3"}
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
