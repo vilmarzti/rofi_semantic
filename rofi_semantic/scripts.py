@@ -1,6 +1,11 @@
+<<<<<<< HEAD
 import models.quantization
 from constants import TRANSFORMER_URL
 
+=======
+from constants import TRANSFORMER_PATH
+import models.quantization
+>>>>>>> a8eaea6 (Docs)
 import argparse
 
 
@@ -23,13 +28,13 @@ if __name__ == "__main__":
 
     parser_quantize.add_argument(
         '--save_dir', '-s',
-        default='.models/',
+        default='models',
         type=str
     )
 
     parser_quantize.add_argument(
         '--model', '-m',
-        default=TRANSFORMER_URL,
+        default=TRANSFORMER_PATH,
         type=str
     )
 

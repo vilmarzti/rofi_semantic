@@ -1,9 +1,11 @@
 from os import path, environ
+
 from glob import glob
+from xdg.BaseDirectory import xdg_data_dirs
 from xdg.DesktopEntry import DesktopEntry
 from xdg.Exceptions import ParsingError, DuplicateGroupError, DuplicateKeyError
 
-from semantic_transformer import SemanticTransformer
+#from semantic_transformer import SemanticTransformer
 
 import re
 import logging
@@ -11,16 +13,17 @@ import subprocess
 
 
 def get_app_paths():
-    paths = environ.get("XDG_DATA_DIRS").split(':')
-    paths = [p for p in paths if path.exists(p)]
-
+    """ Returns all entries from the given xdg paths
+    """
     file_paths = []
-    for p in paths:
+    for p in xdg_data_dirs:
         file_paths.extend(glob(path.join(p, '**/*.desktop'), recursive=True))
     return file_paths
 
 
 def get_raw_app_information():
+    """Parse all the xdg entries.
+    """
     entries = []
     for file_path in get_app_paths():
         try:
@@ -33,6 +36,12 @@ def get_raw_app_information():
 
 
 def get_whatis_entry(name, command):
+    """ Use 'whatis <command>' to get a natural language description.
+
+    Args:
+        name: Name of entry
+        command: Command to look up
+    """
     whatis_cmd = subprocess.run(['whatis', '-l', command], capture_output=True)
 
     description = None
@@ -44,6 +53,11 @@ def get_whatis_entry(name, command):
 
 
 def get_app_description(xdg_entry):
+    """Check 'whatis' or xdg entry comment for natural language description
+
+    Args:
+        xdg_entry: Parsed xdg entry
+    """
     name = xdg_entry.getName()
     exec_command = re.match(r'\S*', xdg_entry.getExec())
 
@@ -60,6 +74,8 @@ def get_app_description(xdg_entry):
 
 
 def get_app_information():
+    """get_app_information.
+    """
     entries = get_raw_app_information()
 
     encoder = SemanticTransformer()
