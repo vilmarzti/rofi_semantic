@@ -1,10 +1,6 @@
 from neural_compressor.config import PostTrainingQuantConfig
 from optimum.intel import INCQuantizer, INCModelForSeq2SeqLM
-<<<<<<< HEAD
-from sentence_transformers import SentenceTransformer
-=======
 from constants import TRANSFORMER_PATH
->>>>>>> a8eaea6 (Docs)
 from transformers import AutoModel
 
 
