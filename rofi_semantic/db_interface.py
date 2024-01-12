@@ -34,7 +34,7 @@ def create_table():
 
 
 def adapt_entry(entry):
-    return f"{entry.name};{entry.icon};{entry.exec};{entry.desc}"
+    return f"{entry.name};{entry.icon};{entry.exec};{entry.desc};{entry.embedding}"
 
 
 def convert_entry():
